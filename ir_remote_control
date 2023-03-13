@@ -1,0 +1,111 @@
+#include <Servo.h>
+#include <IRremote.h>
+
+#define servos 12
+Servo myservo[servos];
+
+const int RECV_PIN = 2;
+IRrecv irrecv(RECV_PIN);
+decode_results results;
+
+
+// Declare the Servo pin
+
+int servoPin[servos] = {12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 1, 0};
+
+void setup() {
+  Serial.begin(9600);
+  IrReceiver.begin(RECV_PIN, ENABLE_LED_FEEDBACK);
+  for (int i = 0; i < servos; i++) {
+
+    // Attach the servo to the servo object
+    myservo[i].attach(servoPin[i]);
+
+    // Wait 500 milliseconds
+    delay(500);
+  }
+}
+
+void loop() {
+
+  if (irrecv.decode(&results))
+  {
+    Serial.println(results.value);
+    switch (results.value) {
+      case 16753245:      //openroof
+        myservo[0].write(90);
+        delay(1000);
+         myservo[1].write(90);
+        delay(1000);
+        myservo[2].write(90);
+        delay(1000);
+        myservo[3].write(90);
+        delay(1000);
+        break;
+      case 16736925:      //closeroof
+        myservo[0].write(0);
+        delay(1000);
+        myservo[1].write(0);
+        delay(1000);
+        myservo[2].write(0);
+        delay(1000);
+        myservo[3].write(0);
+        delay(1000);
+        break;
+      case 16769565:      //openwalls
+        myservo[4].write(90);
+        delay(1000);
+        myservo[5].write(90);
+        delay(1000);
+        myservo[6].write(90);
+        delay(1000);
+        myservo[7].write(90);
+        delay(1000);
+        break;
+      case 16720605:      //closewalls
+        myservo[4].write(0);
+        delay(1000);
+        myservo[5].write(0);
+        delay(1000);
+        myservo[6].write(0);
+        delay(1000);
+        myservo[7].write(0);
+        delay(1000);
+        break;
+      case 16712445:      //opendoor1
+        myservo[8].write(90);
+        delay(1000);
+        break;
+      case 16761405:      //closedoor1
+        myservo[8].write(0);
+        delay(1000);
+        break;
+      case 16769055:      //opendoor2
+        myservo[9].write(90);
+        delay(1000);
+        break;
+      case 16754775:      //closedoor2
+        myservo[9].write(0);
+        delay(1000);
+        break;
+      case 16748655:      //opendoor3
+        myservo[10].write(90);
+        delay(1000);
+        break;
+      case 16738455:      //closedoor3
+        myservo[10].write(0);
+        delay(1000);
+        break;
+      case 16750695:      //opendoor4
+        myservo[11].write(90);
+        delay(1000);
+        break;
+      case 16756815:      //closedoor4
+        myservo[11].write(0);
+        delay(1000);
+        break;
+    }
+
+    irrecv.resume();   // Receive the next value
+  }
+}
